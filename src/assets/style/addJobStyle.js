@@ -39,7 +39,7 @@ const cssInfo = {
 
     button_div: {
         paddingTop: 30,
-    }
+    },
 };
 
 export default cssInfo;

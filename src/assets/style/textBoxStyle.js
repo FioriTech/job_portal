@@ -13,7 +13,6 @@ const textBoxStyle = {
     },
 
     text_value: {
-        fontWeight: 600,
         color: 'black',
         fontFamily: 'Montserrat, sans-serif',
     },
@@ -27,9 +26,6 @@ const textBoxStyle = {
     },
 
     css_underline: {
-        paddingLeft: 35,
-        paddingRight: 35,
-
         '&:before': {
             borderBottomColor: '#999',
         },
@@ -39,7 +35,7 @@ const textBoxStyle = {
         '&:hover:not($enabled):before': {
             borderBottomColor: '#999',
         },
-    }
-}
+    },
+};
 
 export default textBoxStyle;
