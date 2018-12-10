@@ -1,0 +1,66 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "plugins": [
+    "babel",
+    "import",
+    "react",
+    "sort-imports-es6"
+  ],
+  "env": {
+    "browser": true,
+    "jest": true,
+  },
+  "rules": {
+    "class-methods-use-this": ["error"],
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "ignore"
+    }],
+    "generator-star-spacing": ["error", "before"],
+    "import/extensions": ["off"],
+    "import/first": ["error", null],
+    "indent": ["error", 4],
+    "max-len": ["error", {
+      "code": 110,
+      "ignoreUrls": true,
+      "ignoreRegExpLiterals": true,
+      "ignoreComments": true,
+      "tabWidth": 2,
+    }],
+    "no-param-reassign": ["error", { "props": false }],
+    "no-plusplus": ["off"],
+    "no-restricted-syntax": [
+      "error",
+      "ForInStatement",
+      "LabeledStatement",
+      "WithStatement"
+    ],
+    "no-underscore-dangle": ["error", {
+      "allowAfterThis": true
+    }],
+    "react/forbid-prop-types": ["off"],
+    "react/require-default-props": ["off"],
+    "react/require-extension": ["off"],
+    "react/jsx-indent": ["error", 4],
+    "react/jsx-indent-props": ["error", 4],
+    "import/no-extraneous-dependencies": 0,
+    "sort-imports-es6/sort-imports-es6": ["error",
+      {
+        "ignoreCase": true,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
+      }
+    ],
+    "jsx-a11y/anchor-is-valid": [ "error",
+      {
+        "components": [ "Link" ],
+        "specialLink": [ "to", "hrefLeft", "hrefRight" ],
+        "aspects": [ "noHref", "invalidHref", "preferButton" ]
+      }
+    ]
+  },
+}
