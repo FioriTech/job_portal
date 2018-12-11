@@ -9,9 +9,11 @@ router.post('/insertNewJobData', (req, res, next) => {
         jobType, location, jobCode, experience, openings, requirement,
     } = requestBody;
 
-    compileQuery(`INSERT INTO 'career'
-        ('job_type', 'location', 'job_code', 'experience', 'openings', 'requirement')
-        VALUES ('${jobType}','${location}','${jobCode}','${experience}','${openings}','${requirement}')`)
+    const query = 'INSERT INTO `career` (`job_type`, `location`, `job_code`, `experience`, `openings`, `requirement`) VALUES ("' + jobType + '","' + location + '","' + jobCode + '","' + experience + '",' + openings + ',"' + requirement + '")';
+
+    console.log(query);
+
+    compileQuery(query)
         .then((result) => {
             res.send(result);
         }).catch((error) => {

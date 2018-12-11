@@ -4,8 +4,11 @@ import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import httpHelper from '../helpers/httpHelper';
+import Message from '../common/Message.jsx';
 import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
 import React from 'react';
+import Spinner from 'react-spinkit';
 import TextBox from '../common/TextBox.jsx';
 import Toolbar from '@material-ui/core/Toolbar';
 
@@ -19,21 +22,27 @@ class AddJob extends React.Component {
         this.submit = this.submit.bind(this);
         this.submitSuccess = this.submitSuccess.bind(this);
         this.setErrorValue = this.setErrorValue.bind(this);
+        this.requestFailure = this.requestFailure.bind(this);
+        this.handleCloseMessage = this.handleCloseMessage.bind(this);
 
         this.state = {
             jobType: '',
             location: '',
             jobCode: '',
             experience: '',
-            openings: 0,
+            openings: 1,
             requirement: '',
             loading: false,
-            isError: false,
             errorMessage: '',
+            successMessage: '',
         };
     }
 
-    // UserName and Password onChange event handler.
+    /**
+     * On Change event of the form.
+     * @param  {Object} event [Event object of onChange.]
+     * @return {[type]}       [description]
+     */
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
@@ -48,7 +57,9 @@ class AddJob extends React.Component {
         this.setState({ [fieldName]: value });
     }
 
-    // Log In button event handler.
+    /**
+     * Submit Event
+     */
     submit() {
         const {
             jobType, location, jobCode,
@@ -66,45 +77,87 @@ class AddJob extends React.Component {
                 requirement,
             },
         };
-        this.setState({ loading: true });
+        this.setState({ loading: true, successMessage: '', errorMessage: '' });
 
         httpHelper(submitJobPostObj, this.submitSuccess, this.requestFailure);
     }
 
-    // Log In success callback function.
+    /**
+     * HTTP Request Response.
+     * @param  {[Object]} resp [Success Response.]
+     */
     submitSuccess(resp) {
-        if (resp.status.code === 1000) {
+        if (resp.status === 200) {
             this.setState({
                 loading: false,
-                isError: false,
                 errorMessage: '',
+                successMessage: 'Congrats! New Job Application is posted.',
             });
-        } else if (resp.status.code === 2000) {
-            this.setState({
-                loading: false,
-                isError: true,
-                errorMessage: 'Invalid Credentials',
-            });
+        } else {
+            this.requestFailure(resp);
         }
     }
 
-    // Component Render Function.
+    /**
+     * Handle Close Event
+     */
+    handleCloseMessage() {
+        this.setState({
+            loading: false,
+            errorMessage: '',
+            successMessage: '',
+        });
+    }
+
+    /**
+     * Handles the HTTP request failure.
+     * @param  {Object} response [With Error info.]
+     */
+    requestFailure(error) {
+        this.setState({ loading: false, errorMessage: error.message });
+    }
+
     render() {
         let error = null;
         let loadingState = null;
 
         const { classes } = this.props;
+        const { errorMessage, successMessage } = this.state;
 
-        if (this.state.isError) {
-            error = (<center><span className="error">{this.state.errorMessage}</span></center>);
+        if (errorMessage || successMessage) {
+            let message = errorMessage;
+            let color = 'd32f2f';
+
+            if (successMessage) {
+                message = successMessage;
+                color = '#43a047';
+            }
+
+            error = (
+                <Message
+                    message={message}
+                    handleClose={this.handleCloseMessage}
+                    color={color}
+                />
+            );
         }
 
         if (this.state.loading) {
-            loadingState = (<div className="overlay" />);
+            loadingState = (
+                <div className={classes.overlay}>
+                    <Spinner
+                        className={classes.spinner}
+                        name="chasing-dots"
+                        fadeIn="none"
+                        color="black"
+                    />
+                </div>
+            );
         }
 
         return (
             <div>
+                {loadingState}
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="h6" color="inherit">
@@ -229,9 +282,16 @@ class AddJob extends React.Component {
                         </Paper>
                     </Grid>
                 </Grid>
+                {error}
             </div>
         );
     }
 }
+
+AddJob.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+AddJob.defaultProps = {};
 
 export default withStyles(AddJobStyle)(AddJob);

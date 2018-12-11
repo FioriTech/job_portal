@@ -132,8 +132,14 @@ TextBox.propTypes = {
     type: PropTypes.string,
     name: PropTypes.string.isRequired,
     validityName: PropTypes.string,
-    value: PropTypes.string,
-    defaultValue: PropTypes.string,
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]),
+    defaultValue: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]),
     placeholder: PropTypes.string,
     validationType: PropTypes.oneOf(['mandatory']),
     maxLength: PropTypes.number,
