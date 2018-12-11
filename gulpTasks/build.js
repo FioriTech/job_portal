@@ -1,19 +1,20 @@
+import { argv } from 'yargs';
 import gulp from 'gulp';
-import {argv} from 'yargs';
 import webpackConfig from '../webpack.config';
 import webpackStream from 'webpack-stream';
 
 if (argv.prod) {
     process.env.NODE_ENV = 'production';
 }
-let PROD = process.env.NODE_ENV === 'production';
+
+const PROD = process.env.NODE_ENV === 'production';
 // Configuration
 const src = 'public';
 const config = {
     port: 4000,
     paths: {
         baseDir: PROD ? 'build' : 'dist',
-        entry: src + '/CalivaApp.js',
+        entry: `${src}/CalivaApp.js`,
     },
 };
 
@@ -27,6 +28,6 @@ gulp.task('build', () => {
     }
 
     return gulp.src(config.paths.entry)
-    .pipe(webpackStream(webpack))
-    .pipe(gulp.dest(config.paths.baseDir));
+        .pipe(webpackStream(webpack))
+        .pipe(gulp.dest(config.paths.baseDir));
 });

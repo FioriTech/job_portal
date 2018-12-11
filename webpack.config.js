@@ -17,7 +17,7 @@ module.exports.dev = {
     ],
     target: 'web',
     output: {
-        path: __dirname + '/dist',
+        path: `${__dirname}/dist`,
         publicPath: '/',
         filename: 'bundle.js',
     },
@@ -80,7 +80,7 @@ module.exports.prod = {
     entry: './public/JobPortal',
     target: 'web',
     output: {
-        path: __dirname + '/build',
+        path: `${__dirname}/build`,
         publicPath: '/',
         filename: 'bundle.js',
     },
@@ -92,12 +92,13 @@ module.exports.prod = {
         new webpack.DefinePlugin(GLOBALS),
         new ExtractTextPlugin('bundle.css'),
         new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
+        new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
     ],
     module: {
         loaders: [
             {
-                test: /\.js$/, include: [
+                test: /\.js$/,
+                include: [
                     path.join(__dirname, 'public'),
                     path.join(__dirname, 'test'),
                 ],
@@ -111,7 +112,8 @@ module.exports.prod = {
                 test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/,
                 loader: 'url?limit=100000&name=images/[name].[ext]',
             },
-            {   test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/,
+            {
+                test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/,
                 loader: 'url?limit=100000&name=fonts/[name].[ext]',
             },
         ],
@@ -119,4 +121,4 @@ module.exports.prod = {
     resolve: {
         root: [path.resolve('./public')],
     },
-}
+};

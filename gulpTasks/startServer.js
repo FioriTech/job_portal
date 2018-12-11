@@ -1,21 +1,20 @@
 /* eslint-disable no-console */
-import {argv} from 'yargs';
-
-import gulp from 'gulp';
-import express from 'express';
+import { argv } from 'yargs';
+import bodyParser from 'body-parser';
 import compression from 'compression';
-import webpackConfig from '../webpack.config';
+import express from 'express';
+import gulp from 'gulp';
+import insertNewJobDataRoutes from '../server/APIs/insertNewJobData.js';
 import path from 'path';
 import webpack from 'webpack';
-import bodyParser from 'body-parser';
-
-import insertNewJobDataRoutes from '../server/APIs/insertNewJobData.js';
+import webpackConfig from '../webpack.config';
 
 // If gulp was called in the terminal with the --prod flag, set the node environment to production
 if (argv.prod) {
     process.env.NODE_ENV = 'production';
 }
-let PROD = process.env.NODE_ENV === 'production';
+
+const PROD = process.env.NODE_ENV === 'production';
 
 // Running server.
 gulp.task('startServer', () => {
@@ -29,10 +28,10 @@ gulp.task('startServer', () => {
     }
 
     const port = 4000;
-    const baseDir = PROD ? 'build': 'dist';
+    const baseDir = PROD ? 'build' : 'dist';
 
     if (PROD) {
-        app.use(require('webpack-dev-middleware')(compiler, {
+        app.use((compiler, {
             noInfo: true, publicPath: webpackConfig.prod.output.publicPath,
         }));
         app.use(require('webpack-hot-middleware')(compiler));
