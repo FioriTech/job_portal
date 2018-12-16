@@ -31,7 +31,7 @@ gulp.task('startServer', () => {
     const baseDir = PROD ? 'build' : 'dist';
 
     if (PROD) {
-        app.use((compiler, {
+        app.use(require('webpack-dev-middleware')(compiler, {
             noInfo: true, publicPath: webpackConfig.prod.output.publicPath,
         }));
         app.use(require('webpack-hot-middleware')(compiler));

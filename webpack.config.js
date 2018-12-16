@@ -77,7 +77,7 @@ module.exports.prod = {
     debug: true,
     devtool: 'source-map',
     noInfo: false,
-    entry: './public/JobPortal',
+    entry: './src/JobPortal.jsx',
     target: 'web',
     output: {
         path: `${__dirname}/build`,
@@ -85,7 +85,7 @@ module.exports.prod = {
         filename: 'bundle.js',
     },
     devServer: {
-        contentBase: './public',
+        contentBase: './src',
     },
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
@@ -100,6 +100,16 @@ module.exports.prod = {
                 test: /\.js$/,
                 include: [
                     path.join(__dirname, 'public'),
+                    path.join(__dirname, 'src'),
+                    path.join(__dirname, 'test'),
+                ],
+                loaders: ['babel'],
+            },
+            {
+                test: /\.jsx$/,
+                include: [
+                    path.join(__dirname, 'public'),
+                    path.join(__dirname, 'src'),
                     path.join(__dirname, 'test'),
                 ],
                 loaders: ['babel'],
