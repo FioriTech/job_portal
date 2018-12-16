@@ -27,7 +27,7 @@ gulp.task('startServer', () => {
         compiler = webpack(webpackConfig.dev);
     }
 
-    const port = 4000;
+    const port = 8080;
     const baseDir = PROD ? 'build' : 'dist';
 
     if (PROD) {
@@ -75,6 +75,6 @@ gulp.task('startServer', () => {
     });
 
     app.listen(port, () => {
-        console.log('Listening on 4000...');
+        console.log('Listening on 8080...');
     });
 });
