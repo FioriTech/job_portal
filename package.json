@@ -4,6 +4,7 @@
   "description": "Job Portal Project",
   "main": "index.js",
   "scripts": {
+    "start": "gulp --prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Rahul Garg <rahulgarg30591>",
