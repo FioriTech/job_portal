@@ -8,14 +8,14 @@ import axios from 'axios';
  * @return {Objet Callback}          [Return Object Callback]
  */
 export default function requestData(httpObj, successHandler, errorHandler, isJSON = true) {
-    const hostName = document.location.hostname;
-    const serverUrl = `http://${hostName}:4000/`;
+    const serverUrl = 'http://localhost:4000/';
     const paramsInfo = httpObj.params;
     let httpData = JSON.stringify(httpObj.data);
 
     if (!isJSON) {
         httpData = httpObj.data;
     }
+
     return axios.request({
         url: httpObj.url,
         method: httpObj.method || 'post',

@@ -3,6 +3,7 @@ import { argv } from 'yargs';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import express from 'express';
+import getAllJobsRoutes from '../server/APIs/getAllJobs.js';
 import gulp from 'gulp';
 import insertNewJobDataRoutes from '../server/APIs/insertNewJobData.js';
 import path from 'path';
@@ -27,7 +28,7 @@ gulp.task('startServer', () => {
         compiler = webpack(webpackConfig.dev);
     }
 
-    const port = 8080;
+    const port = 4000;
     const baseDir = PROD ? 'build' : 'dist';
 
     if (PROD) {
@@ -53,6 +54,7 @@ gulp.task('startServer', () => {
     });
 
     // Opening up API ports.
+    app.use('/api', getAllJobsRoutes);
     app.use('/api', insertNewJobDataRoutes);
 
     app.get('*', (req, res) => {
@@ -75,6 +77,6 @@ gulp.task('startServer', () => {
     });
 
     app.listen(port, () => {
-        console.log('Listening on 8080...');
+        console.log('Listening on 4000...');
     });
 });

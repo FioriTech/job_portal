@@ -67,7 +67,7 @@ class AddJob extends React.Component {
         } = this.state;
 
         const submitJobPostObj = {
-            url: 'http://localhost:4000/api/insertNewJobData',
+            url: '/api/insertNewJobData',
             data: {
                 jobType,
                 location,
@@ -126,7 +126,7 @@ class AddJob extends React.Component {
 
         if (errorMessage || successMessage) {
             let message = errorMessage;
-            let color = 'd32f2f';
+            let color = '#d32f2f';
 
             if (successMessage) {
                 message = successMessage;

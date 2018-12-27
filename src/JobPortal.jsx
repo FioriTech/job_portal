@@ -4,6 +4,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { render } from 'react-dom';
 import AddJob from './js/components/AddJob.jsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import JobList from './js/components/JobList.jsx';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import React, { Component } from 'react';
 
@@ -30,7 +31,9 @@ export default class JobPortal extends Component {
             <MuiThemeProvider theme={this.createTheme()}>
                 <CssBaseline>
                     <Router history={browserHistory}>
-                        <Route path="/" component={AddJob} />
+                        <Route path="/" component={JobList} />
+                        <Route path="/jobList" component={JobList} />
+                        <Route path="/addJob" component={AddJob} />
                     </Router>
                 </CssBaseline>
             </MuiThemeProvider>
