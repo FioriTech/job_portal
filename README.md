@@ -36,7 +36,7 @@ To start the server follow the below steps:
     ```sh
     gulp
     ```
-    this command will lauch the application on port 4000.
+    this command will lauch the application on port 8080.
 
 ### Version: 1
 This is the very first version of the project.

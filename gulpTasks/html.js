@@ -11,7 +11,7 @@ const PROD = process.env.NODE_ENV === 'production';
 // Configuration
 const src = 'public';
 const config = {
-    port: 4000,
+    port: 8080,
     paths: {
         html: `${src}/JobPortal.html`,
         baseDir: PROD ? 'build' : 'dist',
