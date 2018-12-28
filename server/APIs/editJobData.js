@@ -3,13 +3,15 @@ import express from 'express';
 
 const router = express.Router();
 
-router.post('/insertNewJobData', (req, res, next) => {
+router.post('/editJobData', (req, res, next) => {
     const requestBody = req.body;
     const {
-        jobType, location, jobCode, experience, openings, requirement,
+        id, jobType, location, jobCode, experience, openings, requirement,
     } = requestBody;
 
-    const query = 'INSERT INTO `career` (`job_type`, `location`, `job_code`, `experience`, `openings`, `requirement`) VALUES ("' + jobType + '","' + location + '","' + jobCode + '","' + experience + '",' + openings + ',"' + requirement + '")';
+    const query = 'UPDATE `career` SET `job_type`="'+ jobType +'",`location`="'+ location +'",`job_code`="'+ jobCode +'",`experience`="'+ experience +'",`openings`='+ openings +',`requirement`="'+ requirement +'" WHERE `id`=' + id;
+
+    console.log(query);
 
     compileQuery(query)
         .then((result) => {

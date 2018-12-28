@@ -2,6 +2,8 @@
 import { argv } from 'yargs';
 import bodyParser from 'body-parser';
 import compression from 'compression';
+import deleteJob from '../server/APIs/deleteJob.js';
+import editJobData from '../server/APIs/editJobData.js';
 import express from 'express';
 import getAllJobsRoutes from '../server/APIs/getAllJobs.js';
 import gulp from 'gulp';
@@ -55,7 +57,9 @@ gulp.task('startServer', () => {
 
     // Opening up API ports.
     app.use('/api', getAllJobsRoutes);
+    app.use('/api', deleteJob);
     app.use('/api', insertNewJobDataRoutes);
+    app.use('/api', editJobData);
 
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, '../', baseDir, '/JobPortal.html'));

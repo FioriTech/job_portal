@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import { browserHistory, Route, Router } from 'react-router';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { render } from 'react-dom';
-import AddJob from './js/components/AddJob.jsx';
+import AddEditJob from './js/components/AddEditJob.jsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JobList from './js/components/JobList.jsx';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
@@ -13,8 +13,36 @@ export default class JobPortal extends Component {
         super(props);
         this.state = {
             nightMode: false,
+            targettedJob: null,
         };
         this.createTheme = this.createTheme.bind(this);
+        this.getTargetJob = this.getTargetJob.bind(this);
+        this.routes = (
+            <div>
+                <Route
+                    path="/"
+                    component={() => <JobList editTargetJob={this.getTargetJob} />}
+                />
+                <Route
+                    path="/jobList"
+                    component={() => <JobList editTargetJob={this.getTargetJob} />}
+                />
+                <Route
+                    path="/addJob"
+                    component={() => <AddEditJob />}
+                />
+                <Route
+                    path="/editJob"
+                    component={() => <AddEditJob targettedJob={this.state.targettedJob} />}
+                />
+            </div>
+        );
+    }
+
+    getTargetJob(job) {
+        this.setState({ targettedJob: job }, () => {
+            browserHistory.push('/editJob');
+        });
     }
 
     createTheme() {
@@ -31,9 +59,7 @@ export default class JobPortal extends Component {
             <MuiThemeProvider theme={this.createTheme()}>
                 <CssBaseline>
                     <Router history={browserHistory}>
-                        <Route path="/" component={JobList} />
-                        <Route path="/jobList" component={JobList} />
-                        <Route path="/addJob" component={AddJob} />
+                        {this.routes}
                     </Router>
                 </CssBaseline>
             </MuiThemeProvider>
@@ -42,3 +68,7 @@ export default class JobPortal extends Component {
 }
 
 render(<JobPortal />, document.getElementById('app'));
+//
+// <Route path="/" component={JobList} />
+// <Route path="/jobList" component={JobList} />
+// <Route path="/addJob" component={AddJob} />

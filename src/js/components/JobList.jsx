@@ -1,10 +1,13 @@
+import { browserHistory } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
-import AddJobStyle from '../../assets/style/addJobStyle';
+import AddIcon from '@material-ui/icons/Add';
 import AppBar from '@material-ui/core/AppBar';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
+import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import httpHelper from '../helpers/httpHelper';
+import JobListStyle from '../../assets/style/jobListStyle';
 import Message from '../common/Message.jsx';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
@@ -20,17 +23,27 @@ class JobList extends React.Component {
         this.compileData = this.compileData.bind(this);
         this.submitSuccess = this.submitSuccess.bind(this);
         this.requestFailure = this.requestFailure.bind(this);
+        this.editJobPosting = this.editJobPosting.bind(this);
+        this.deleteJob = this.deleteJob.bind(this);
+        this.deleteSuccess = this.deleteSuccess.bind(this);
+        this.handleCloseMessage = this.handleCloseMessage.bind(this);
+        this.initializeData = this.initializeData.bind(this);
 
+        this.jobData = null;
         this.state = {
-            jobData: null,
             loading: true,
             tableHeader: [],
             jobView: [],
             errorMessage: '',
+            successMessage: '',
         };
     }
 
     componentDidMount() {
+        this.initializeData();
+    }
+
+    initializeData() {
         const getAllJobsHTTPObj = {
             method: 'GET',
             url: '/api/getAllJobs',
@@ -44,6 +57,7 @@ class JobList extends React.Component {
             this.setState({
                 loading: false,
                 errorMessage: '',
+                successMessage: '',
             });
             this.compileData(resp.data);
         } else {
@@ -55,13 +69,58 @@ class JobList extends React.Component {
         this.setState({ loading: false, errorMessage: error.message });
     }
 
+    editJobPosting({ currentTarget }) {
+        const jobId = currentTarget.attributes.name.value;
+        const targetedJob = this.jobData.filter(x => x.id.toString() === jobId)[0];
+        this.props.editTargetJob(targetedJob);
+    }
+
+    deleteJob({ currentTarget }) {
+        const result = confirm('Are you sure you want to delete the job application?');
+
+        if (result) {
+            const jobId = currentTarget.attributes.name.value;
+            const deleteJobHTTPObj = {
+                data: { id: jobId },
+                url: '/api/deleteJob',
+            };
+
+            httpHelper(deleteJobHTTPObj, this.deleteSuccess, this.requestFailure);
+            this.setState({ loading: true, errorMessage: '' });
+        }
+    }
+
+    deleteSuccess(resp) {
+        if (resp.status === 200) {
+            this.setState({
+                loading: false,
+                errorMessage: '',
+                successMessage: 'Job is deleted suceessfully.',
+            });
+            this.initializeData();
+        } else {
+            this.requestFailure(resp);
+        }
+    }
+
     compileData(data) {
         const viewResult = [];
         let tableHeader = [];
+        const { classes } = this.props;
+        let index = 0;
+        let className = '';
 
         for (const job of data) {
+            index++;
+
+            if (index % 2 !== 0) {
+                className = 'row';
+            } else {
+                className = 'row_stripped';
+            }
+
             const jobRowItem = (
-                <Grid container key={job.id} onClick={this.showJob}>
+                <Grid container key={job.id} onClick={this.showJob} className={classes[className]}>
                     <Grid item xs={3}>
                         <Typography variant="subtitle1" color="inherit" align="center">
                             {job.job_type}
@@ -87,14 +146,14 @@ class JobList extends React.Component {
                             {job.openings}
                         </Typography>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={1} onClick={this.editJobPosting} name={job.id} >
                         <Typography variant="subtitle1" color="inherit" align="center">
-                            <EditIcon />
+                            <EditIcon color="primary" className={classes.icons} />
                         </Typography>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={1} onClick={this.deleteJob} name={job.id}>
                         <Typography variant="subtitle1" color="inherit" align="center">
-                            <DeleteForeverIcon />
+                            <DeleteForeverIcon color="error" className={classes.icons} />
                         </Typography>
                     </Grid>
                 </Grid>
@@ -105,40 +164,75 @@ class JobList extends React.Component {
 
         if (viewResult.length > 0) {
             tableHeader = (
-                <Grid container>
+                <Grid container className={classes.headerClass}>
                     <Grid item xs={3}>
-                        <Typography variant="h6" color="inherit" align="center">
-                            Job Type
+                        <Typography
+                            variant="subtitle1"
+                            color="inherit"
+                            align="center"
+                            classes={{ subtitle1: classes.headingClass }}
+                        >
+                            JOB TYPE
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                        <Typography variant="h6" color="inherit" align="center">
-                            Job Location
+                        <Typography
+                            variant="subtitle1"
+                            color="inherit"
+                            align="center"
+                            classes={{ subtitle1: classes.headingClass }}
+                        >
+                            JOB LOCATION
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                        <Typography variant="h6" color="inherit" align="center">
-                            Job Code
+                        <Typography
+                            variant="subtitle1"
+                            color="inherit"
+                            align="center"
+                            classes={{ subtitle1: classes.headingClass }}
+                        >
+                            JOB CODE
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                        <Typography variant="h6" color="inherit" align="center">
-                            Experience
+                        <Typography
+                            variant="subtitle1"
+                            color="inherit"
+                            align="center"
+                            classes={{ subtitle1: classes.headingClass }}
+                        >
+                            EXPERIENCE
                         </Typography>
                     </Grid>
                     <Grid item xs={1}>
-                        <Typography variant="h6" color="inherit" align="center">
-                            Openings
+                        <Typography
+                            variant="subtitle1"
+                            color="inherit"
+                            align="center"
+                            classes={{ subtitle1: classes.headingClass }}
+                        >
+                            OPENINGS
                         </Typography>
                     </Grid>
                     <Grid item xs={1}>
-                        <Typography variant="h6" color="inherit" align="center">
-                            Edit
+                        <Typography
+                            variant="subtitle1"
+                            color="inherit"
+                            align="center"
+                            classes={{ subtitle1: classes.headingClass }}
+                        >
+                            EDIT
                         </Typography>
                     </Grid>
                     <Grid item xs={1}>
-                        <Typography variant="h6" color="inherit" align="center">
-                            Delete
+                        <Typography
+                            variant="subtitle1"
+                            color="inherit"
+                            align="center"
+                            classes={{ subtitle1: classes.headingClass }}
+                        >
+                            DELETE
                         </Typography>
                     </Grid>
                 </Grid>
@@ -148,8 +242,16 @@ class JobList extends React.Component {
         this.setState({
             tableHeader,
             jobView: viewResult,
-            jobData: data,
-            loading: false
+            loading: false,
+        });
+        this.jobData = data;
+    }
+
+    handleCloseMessage() {
+        this.setState({
+            loading: false,
+            errorMessage: '',
+            successMessage: '',
         });
     }
 
@@ -158,14 +260,22 @@ class JobList extends React.Component {
         let error = null;
 
         const { classes } = this.props;
-        const { errorMessage } = this.state;
+        const { errorMessage, successMessage } = this.state;
 
-        if (errorMessage) {
+        if (errorMessage || successMessage) {
+            let message = successMessage;
+            let color = '#43a047';
+
+            if (errorMessage) {
+                message = errorMessage;
+                color = '#d32f2f';
+            }
+
             error = (
                 <Message
-                    message={errorMessage}
+                    message={message}
                     handleClose={this.handleCloseMessage}
-                    color="#d32f2f"
+                    color={color}
                 />
             );
         }
@@ -188,9 +298,23 @@ class JobList extends React.Component {
                 {loadingState}
                 <AppBar position="static">
                     <Toolbar>
-                        <Typography variant="h6" color="inherit">
-                            Job List
-                        </Typography>
+                        <Grid container direction="row" justify="flex-start">
+                            <Grid item xs={8} sm={4} md={4} lg={3} xl={3}>
+                                <Typography variant="h6" color="inherit">
+                                    Job List
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={4} sm={8} md={8} lg={9} xl={9}>
+                                <Fab
+                                    color="primary"
+                                    aria-label="Add"
+                                    className={classes.add_btn}
+                                    onClick={() => { browserHistory.push('/addJob'); }}
+                                >
+                                    <AddIcon />
+                                </Fab>
+                            </Grid>
+                        </Grid>
                     </Toolbar>
                 </AppBar>
                 <Grid
@@ -215,8 +339,9 @@ class JobList extends React.Component {
 
 JobList.propTypes = {
     classes: PropTypes.object.isRequired,
+    editTargetJob: PropTypes.func,
 };
 
 JobList.defaultProps = {};
 
-export default withStyles(AddJobStyle)(JobList);
+export default withStyles(JobListStyle)(JobList);

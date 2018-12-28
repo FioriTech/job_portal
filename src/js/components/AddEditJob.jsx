@@ -1,3 +1,4 @@
+import { browserHistory } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import AddJobStyle from '../../assets/style/addJobStyle';
 import AppBar from '@material-ui/core/AppBar';
@@ -14,7 +15,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 
 import Typography from '@material-ui/core/Typography';
 
-class AddJob extends React.Component {
+class AddEditJob extends React.Component {
+    static cancel() {
+        browserHistory.push('/');
+    }
+
     constructor(props) {
         super(props);
 
@@ -35,7 +40,24 @@ class AddJob extends React.Component {
             loading: false,
             errorMessage: '',
             successMessage: '',
+            header: 'Add a Job Posting',
         };
+    }
+
+    componentWillMount() {
+        const { targettedJob } = this.props;
+
+        if (targettedJob) {
+            this.setState({
+                header: 'Edit the Job Posting',
+                jobType: targettedJob.job_type,
+                location: targettedJob.location,
+                jobCode: targettedJob.job_code,
+                experience: targettedJob.experience,
+                openings: targettedJob.openings,
+                requirement: targettedJob.requirement,
+            });
+        }
     }
 
     /**
@@ -65,20 +87,28 @@ class AddJob extends React.Component {
             jobType, location, jobCode,
             experience, openings, requirement,
         } = this.state;
+        const { targettedJob } = this.props;
+        const data = {
+            jobType,
+            location,
+            jobCode,
+            experience,
+            openings,
+            requirement,
+        };
+        let url = '/api/insertNewJobData';
+
+        if (targettedJob) {
+            url = '/api/editJobData';
+            data.id = targettedJob.id;
+        }
 
         const submitJobPostObj = {
-            url: '/api/insertNewJobData',
-            data: {
-                jobType,
-                location,
-                jobCode,
-                experience,
-                openings,
-                requirement,
-            },
+            url,
+            data,
         };
-        this.setState({ loading: true, successMessage: '', errorMessage: '' });
 
+        this.setState({ loading: true, successMessage: '', errorMessage: '' });
         httpHelper(submitJobPostObj, this.submitSuccess, this.requestFailure);
     }
 
@@ -88,10 +118,18 @@ class AddJob extends React.Component {
      */
     submitSuccess(resp) {
         if (resp.status === 200) {
+            let message = 'Congrats! New Job Application is posted.';
+
+            if (this.props.targettedJob) {
+                message = 'Congrats! Selected Job Application is updated.';
+            }
+
             this.setState({
                 loading: false,
                 errorMessage: '',
-                successMessage: 'Congrats! New Job Application is posted.',
+                successMessage: message,
+            }, () => {
+                setTimeout(() => { browserHistory.push('/'); }, 1500);
             });
         } else {
             this.requestFailure(resp);
@@ -122,7 +160,7 @@ class AddJob extends React.Component {
         let loadingState = null;
 
         const { classes } = this.props;
-        const { errorMessage, successMessage } = this.state;
+        const { errorMessage, successMessage, header } = this.state;
 
         if (errorMessage || successMessage) {
             let message = errorMessage;
@@ -161,7 +199,7 @@ class AddJob extends React.Component {
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="h6" color="inherit">
-                            Add a Job Posting
+                            {header}
                         </Typography>
                     </Toolbar>
                 </AppBar>
@@ -271,6 +309,15 @@ class AddJob extends React.Component {
                             <center>
                                 <Button
                                     variant="contained"
+                                    color="secondary"
+                                    type="button"
+                                    onClick={AddEditJob.cancel}
+                                    className={classes.submit_btn}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="contained"
                                     color="primary"
                                     type="button"
                                     onClick={this.submit}
@@ -288,10 +335,14 @@ class AddJob extends React.Component {
     }
 }
 
-AddJob.propTypes = {
+AddEditJob.propTypes = {
+    history: PropTypes.object,
     classes: PropTypes.object.isRequired,
+    targettedJob: PropTypes.object,
 };
 
-AddJob.defaultProps = {};
+AddEditJob.defaultProps = {
+    targettedJob: null,
+};
 
-export default withStyles(AddJobStyle)(AddJob);
+export default withStyles(AddJobStyle)(AddEditJob);
