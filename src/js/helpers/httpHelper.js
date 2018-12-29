@@ -8,7 +8,7 @@ import axios from 'axios';
  * @return {Objet Callback}          [Return Object Callback]
  */
 export default function requestData(httpObj, successHandler, errorHandler, isJSON = true) {
-    const serverUrl = window.location.href;
+    const serverUrl = window.location.origin;
     const paramsInfo = httpObj.params;
     let httpData = JSON.stringify(httpObj.data);
 
