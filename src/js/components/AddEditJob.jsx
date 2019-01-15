@@ -221,7 +221,7 @@ class AddEditJob extends React.Component {
                                 defaultValue={this.state.jobType}
                                 placeholder="Job Type"
                                 validationType="mandatory"
-                                maxLength={100}
+                                maxLength={200}
                                 autoComplete="off"
                                 disabled={false}
                                 setErrorValue={this.setErrorValue}
@@ -236,7 +236,7 @@ class AddEditJob extends React.Component {
                                 defaultValue={this.state.location}
                                 placeholder="Job Location"
                                 validationType="mandatory"
-                                maxLength={100}
+                                maxLength={200}
                                 autoComplete="off"
                                 disabled={false}
                                 setErrorValue={this.setErrorValue}
@@ -251,7 +251,7 @@ class AddEditJob extends React.Component {
                                 defaultValue={this.state.jobCode}
                                 placeholder="Job Code"
                                 validationType="mandatory"
-                                maxLength={100}
+                                maxLength={200}
                                 autoComplete="off"
                                 disabled={false}
                                 setErrorValue={this.setErrorValue}
@@ -267,7 +267,7 @@ class AddEditJob extends React.Component {
                                 defaultValue={this.state.openings}
                                 placeholder="Job Code"
                                 validationType="mandatory"
-                                maxLength={100}
+                                maxLength={200}
                                 autoComplete="off"
                                 disabled={false}
                                 setErrorValue={this.setErrorValue}
@@ -282,7 +282,7 @@ class AddEditJob extends React.Component {
                                 defaultValue={this.state.experience}
                                 placeholder="Experience"
                                 validationType="mandatory"
-                                maxLength={100}
+                                maxLength={200}
                                 autoComplete="off"
                                 disabled={false}
                                 setErrorValue={this.setErrorValue}
@@ -297,7 +297,7 @@ class AddEditJob extends React.Component {
                                 defaultValue={this.state.requirement}
                                 placeholder="Requirement"
                                 validationType="mandatory"
-                                maxLength={100}
+                                maxLength={8000}
                                 autoComplete="off"
                                 disabled={false}
                                 setErrorValue={this.setErrorValue}
@@ -336,7 +336,6 @@ class AddEditJob extends React.Component {
 }
 
 AddEditJob.propTypes = {
-    history: PropTypes.object,
     classes: PropTypes.object.isRequired,
     targettedJob: PropTypes.object,
 };
